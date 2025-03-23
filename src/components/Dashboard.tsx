@@ -3,9 +3,9 @@ import React from "react";
 import { Container } from "@/components/ui/container";
 import { TripCard } from "./TripCard";
 import { ExpenseTracker } from "./ExpenseTracker";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bot, Plus, ArrowRight } from "lucide-react";
+import { Plus, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AIAssistant } from "./AIAssistant/AIAssistant";
 
 export function Dashboard() {
   // Sample trip data
@@ -74,34 +74,7 @@ export function Dashboard() {
           
           <div className="space-y-8">
             <ExpenseTracker />
-            
-            <Card className="shadow-md border border-travel-purple/20">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg font-semibold flex items-center">
-                  <Bot className="mr-2 h-5 w-5 text-travel-purple" />
-                  AI Travel Assistant
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                  <p className="text-sm text-gray-600 italic">
-                    "How can I help you plan your trip today? Ask me about destinations, 
-                    budget tips, or local recommendations."
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <Button variant="outline" className="w-full justify-start text-left h-auto py-2 px-3">
-                    Suggest budget-friendly stays in Goa
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start text-left h-auto py-2 px-3">
-                    What are the best places to visit in Jaipur?
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start text-left h-auto py-2 px-3">
-                    Create a 5-day itinerary for Manali
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <AIAssistant />
           </div>
         </div>
       </Container>
