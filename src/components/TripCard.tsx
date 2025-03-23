@@ -12,6 +12,7 @@ interface TripCardProps {
   imageUrl: string;
   progress: number;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export function TripCard({
@@ -21,9 +22,13 @@ export function TripCard({
   imageUrl,
   progress,
   className,
+  style,
 }: TripCardProps) {
   return (
-    <Card className={cn("overflow-hidden transition-all duration-300 hover:shadow-lg", className)}>
+    <Card 
+      className={cn("overflow-hidden transition-all duration-300 hover:shadow-lg", className)}
+      style={style}
+    >
       <div className="relative h-48 overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center transform transition-transform duration-500 hover:scale-110"
