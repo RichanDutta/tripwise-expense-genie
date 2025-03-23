@@ -7,10 +7,11 @@ import { useAIAssistant } from "@/hooks/useAIAssistant";
 import { AIMessage } from "@/types/aiAssistant";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
+import { AIAssistantConfig } from "./AIAssistantConfig";
 
 export function AIAssistant() {
   const [inputMessage, setInputMessage] = useState("");
-  const { messages, isLoading, sendMessage } = useAIAssistant();
+  const { messages, isLoading, error, sendMessage, configure } = useAIAssistant();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,20 +23,29 @@ export function AIAssistant() {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to send message. Please try again later.",
+        description: "Failed to send message. Please check the Python backend connection.",
         variant: "destructive",
       });
     }
   };
 
+  const handleConfigChange = (newConfig: any) => {
+    configure(newConfig);
+    toast({
+      title: "Configuration Updated",
+      description: "AI Assistant is now connected to " + newConfig.apiUrl,
+    });
+  };
+
   return (
-    <Card className="shadow-md border border-travel-purple/20 h-full">
+    <Card className="shadow-md border border-travel-purple/20 h-full relative">
       <CardHeader className="pb-2">
         <CardTitle className="text-lg font-semibold flex items-center">
           <Bot className="mr-2 h-5 w-5 text-travel-purple" />
           AI Travel Assistant
         </CardTitle>
       </CardHeader>
+      <AIAssistantConfig onConfigChanged={handleConfigChange} />
       <CardContent className="flex flex-col h-[calc(100%-60px)]">
         <div className="flex-1 overflow-y-auto space-y-3 mb-3">
           {messages.length === 0 ? (
@@ -67,18 +77,46 @@ export function AIAssistant() {
               <p className="text-sm text-gray-500">Thinking...</p>
             </div>
           )}
+          
+          {error && (
+            <div className="bg-red-50 rounded-lg p-3 mr-4 text-red-500">
+              <p className="text-sm">Error: {error}</p>
+              <p className="text-xs mt-1">Check the Python backend connection in settings</p>
+            </div>
+          )}
         </div>
 
         <div className="space-y-2 mt-auto">
           {messages.length === 0 && (
             <>
-              <Button variant="outline" className="w-full justify-start text-left h-auto py-2 px-3">
+              <Button 
+                variant="outline" 
+                className="w-full justify-start text-left h-auto py-2 px-3"
+                onClick={() => {
+                  setInputMessage("Suggest budget-friendly stays in Goa");
+                  handleSubmit(new Event('click') as any);
+                }}
+              >
                 Suggest budget-friendly stays in Goa
               </Button>
-              <Button variant="outline" className="w-full justify-start text-left h-auto py-2 px-3">
+              <Button 
+                variant="outline" 
+                className="w-full justify-start text-left h-auto py-2 px-3"
+                onClick={() => {
+                  setInputMessage("What are the best places to visit in Jaipur?");
+                  handleSubmit(new Event('click') as any);
+                }}
+              >
                 What are the best places to visit in Jaipur?
               </Button>
-              <Button variant="outline" className="w-full justify-start text-left h-auto py-2 px-3">
+              <Button 
+                variant="outline" 
+                className="w-full justify-start text-left h-auto py-2 px-3"
+                onClick={() => {
+                  setInputMessage("Create a 5-day itinerary for Manali");
+                  handleSubmit(new Event('click') as any);
+                }}
+              >
                 Create a 5-day itinerary for Manali
               </Button>
             </>
