@@ -4,10 +4,10 @@ import { Bot, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAIAssistant } from "@/hooks/useAIAssistant";
-import { AIMessage } from "@/types/aiAssistant";
+import { AIMessage, AIAssistantConfig } from "@/types/aiAssistant";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
-import { AIAssistantConfig } from "./AIAssistantConfig";
+import { AIAssistantConfig as AIConfigComponent } from "./AIAssistantConfig";
 
 export function AIAssistant() {
   const [inputMessage, setInputMessage] = useState("");
@@ -29,7 +29,7 @@ export function AIAssistant() {
     }
   };
 
-  const handleConfigChange = (newConfig: any) => {
+  const handleConfigChange = (newConfig: AIAssistantConfig) => {
     configure(newConfig);
     toast({
       title: "Configuration Updated",

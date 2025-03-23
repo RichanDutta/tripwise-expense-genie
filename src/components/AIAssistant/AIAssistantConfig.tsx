@@ -12,11 +12,11 @@ import {
   DialogTitle,
   DialogTrigger
 } from "@/components/ui/dialog";
-import { AIAssistantConfig } from "@/types/aiAssistant";
+import { type AIAssistantConfig as AIConfig } from "@/types/aiAssistant";
 import { aiAssistantService } from "@/services/aiAssistantService";
 
 interface AIAssistantConfigProps {
-  onConfigChanged?: (config: AIAssistantConfig) => void;
+  onConfigChanged?: (config: AIConfig) => void;
 }
 
 export function AIAssistantConfig({ onConfigChanged }: AIAssistantConfigProps) {
