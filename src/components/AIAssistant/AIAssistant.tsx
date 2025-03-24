@@ -4,7 +4,7 @@ import { Bot, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAIAssistant } from "@/hooks/useAIAssistant";
-import { AIMessage, AIAssistantConfig } from "@/types/aiAssistant";
+import { AIMessage, AIAssistantConfig as AIConfig } from "@/types/aiAssistant";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { AIAssistantConfig as AIConfigComponent } from "./AIAssistantConfig";
@@ -29,7 +29,7 @@ export function AIAssistant() {
     }
   };
 
-  const handleConfigChange = (newConfig: AIAssistantConfig) => {
+  const handleConfigChange = (newConfig: AIConfig) => {
     configure(newConfig);
     toast({
       title: "Configuration Updated",
@@ -45,7 +45,7 @@ export function AIAssistant() {
           AI Travel Assistant
         </CardTitle>
       </CardHeader>
-      <AIAssistantConfig onConfigChanged={handleConfigChange} />
+      <AIConfigComponent onConfigChanged={handleConfigChange} />
       <CardContent className="flex flex-col h-[calc(100%-60px)]">
         <div className="flex-1 overflow-y-auto space-y-3 mb-3">
           {messages.length === 0 ? (
