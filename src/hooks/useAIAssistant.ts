@@ -19,7 +19,7 @@ export function useAIAssistant(initialConfig?: Partial<AIAssistantConfig>) {
   }, []);
 
   // Function to send message to the AI assistant
-  const sendMessage = async (content: string) => {
+  const sendMessage = async (content: string, purpose: string = "general") => {
     try {
       // Reset error state
       setError(null);
@@ -32,7 +32,7 @@ export function useAIAssistant(initialConfig?: Partial<AIAssistantConfig>) {
       setIsLoading(true);
       
       // Call API service - connects to Python backend
-      const response = await aiAssistantService.sendMessage(content);
+      const response = await aiAssistantService.sendMessage(content, purpose);
       
       // Add AI response to the state
       const aiMessage: AIMessage = { sender: "assistant", content: response };
