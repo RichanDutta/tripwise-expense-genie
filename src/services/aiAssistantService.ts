@@ -15,7 +15,11 @@ export const aiAssistantService = {
   // Update the configuration
   configure(config: Partial<AIAssistantConfig>) {
     currentConfig = { ...currentConfig, ...config };
-    console.log("AI Assistant configured with:", currentConfig);
+    console.log("AI Assistant configured with:", { 
+      apiUrl: currentConfig.apiUrl,
+      model: currentConfig.model,
+      apiKey: currentConfig.apiKey ? "API key provided" : "No API key" 
+    });
     return currentConfig;
   },
 
@@ -32,7 +36,14 @@ export const aiAssistantService = {
       console.log(`Sending message to ${apiUrl}/chat`);
       
       // In development, we might still use mock responses if the backend isn't ready
+      // or if explicitly requested via environment variable
       if (process.env.NODE_ENV === "development" && process.env.REACT_APP_USE_MOCK_AI === "true") {
+        return this.getMockResponse(content);
+      }
+      
+      // Fallback to mock if no API URL is configured
+      if (!apiUrl || apiUrl.trim() === "") {
+        console.warn("No API URL configured, using mock response");
         return this.getMockResponse(content);
       }
       
@@ -42,6 +53,10 @@ export const aiAssistantService = {
         headers: {
           'Content-Type': 'application/json',
           ...(currentConfig.apiKey && { 'Authorization': `Bearer ${currentConfig.apiKey}` }),
+          // Add CORS headers to allow cross-origin requests
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },
         body: JSON.stringify({ 
           message: content,
@@ -50,14 +65,31 @@ export const aiAssistantService = {
       });
       
       if (!response.ok) {
-        throw new Error(`API returned status: ${response.status}`);
+        const errorText = await response.text().catch(() => "Unknown error");
+        throw new Error(`API returned status: ${response.status} - ${errorText}`);
       }
       
       const data = await response.json();
+      
+      if (!data || !data.response) {
+        throw new Error("Invalid response format from AI backend");
+      }
+      
       return data.response;
     } catch (error) {
       console.error("Error in AI Assistant Service:", error);
-      throw new Error("Failed to get response from AI assistant");
+      
+      // Check if it's a network error (likely CORS or server not running)
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        throw new Error("Could not connect to the AI backend. Please check that your backend server is running and accessible.");
+      }
+      
+      // Check if it's a CORS error
+      if (error instanceof DOMException && error.name === "NetworkError") {
+        throw new Error("CORS error: Your backend server needs to allow requests from this origin.");
+      }
+      
+      throw new Error(error instanceof Error ? error.message : "Failed to get response from AI assistant");
     }
   },
   

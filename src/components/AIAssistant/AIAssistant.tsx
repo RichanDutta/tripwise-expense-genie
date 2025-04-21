@@ -4,7 +4,7 @@ import { Bot, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAIAssistant } from "@/hooks/useAIAssistant";
-import { AIMessage, AIAssistantConfig as AIConfig } from "@/types/aiAssistant";
+import { AIMessage } from "@/types/aiAssistant";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { AIAssistantConfig as AIConfigComponent } from "./AIAssistantConfig";
@@ -21,15 +21,22 @@ export function AIAssistant() {
       await sendMessage(inputMessage);
       setInputMessage("");
     } catch (error) {
+      console.error("Error sending message:", error);
+      
+      let errorMessage = "Failed to send message. Please check the Python backend connection.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
       toast({
         title: "Error",
-        description: "Failed to send message. Please check the Python backend connection.",
+        description: errorMessage,
         variant: "destructive",
       });
     }
   };
 
-  const handleConfigChange = (newConfig: AIConfig) => {
+  const handleConfigChange = (newConfig) => {
     configure(newConfig);
     toast({
       title: "Configuration Updated",
