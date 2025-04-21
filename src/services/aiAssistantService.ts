@@ -1,4 +1,3 @@
-
 import { AIMessageContent, AIAssistantConfig } from "@/types/aiAssistant";
 
 // Default configuration
@@ -10,6 +9,9 @@ const defaultConfig: AIAssistantConfig = {
 
 // Store the current configuration
 let currentConfig: AIAssistantConfig = { ...defaultConfig };
+
+// Check if we're in development mode
+const isDevelopment = import.meta.env.DEV || window.location.hostname === 'localhost';
 
 export const aiAssistantService = {
   // Update the configuration
@@ -37,13 +39,11 @@ export const aiAssistantService = {
       
       // In development, we might still use mock responses if the backend isn't ready
       // or if explicitly requested via environment variable
-      if (process.env.NODE_ENV === "development" && process.env.REACT_APP_USE_MOCK_AI === "true") {
-        return this.getMockResponse(content, purpose);
-      }
+      const useMockResponse = isDevelopment && 
+        (import.meta.env.VITE_USE_MOCK_AI === 'true' || !apiUrl || apiUrl.trim() === "");
       
-      // Fallback to mock if no API URL is configured
-      if (!apiUrl || apiUrl.trim() === "") {
-        console.warn("No API URL configured, using mock response");
+      if (useMockResponse) {
+        console.log("Using mock response");
         return this.getMockResponse(content, purpose);
       }
       
@@ -90,7 +90,7 @@ export const aiAssistantService = {
         throw new Error("CORS error: Your backend server needs to allow requests from this origin.");
       }
       
-      throw new Error(error instanceof Error ? error.message : "Failed to get response from AI assistant");
+      throw error instanceof Error ? error : new Error("Failed to get response from AI assistant");
     }
   },
   
@@ -196,9 +196,21 @@ ${days >= 7 ? `### Day 7
 - **TOTAL**: ${budget === "budget-friendly" ? `₹${(days * 2900).toLocaleString()}-${(days * 5200).toLocaleString()}` : budget === "luxury" ? `₹${(days * 17000).toLocaleString()}-${(days * 27000).toLocaleString()}` : `₹${(days * 6800).toLocaleString()}-${(days * 11700).toLocaleString()}`}
 
 ### Suggested Accommodations
-- **Budget**: ${destination === "Goa" ? "Zostel Goa, Backpacker Panda" : destination === "Jaipur" ? "Moustache Hostel, Zostel Jaipur" : "Local hostels and guesthouses"}
-- **Mid-range**: ${destination === "Goa" ? "Sea Queen Hotel, Santana Beach Resort" : destination === "Jaipur" ? "Umaid Bhawan, Alsisar Haveli" : "3-star hotels and heritage stays"}
-- **Luxury**: ${destination === "Goa" ? "W Goa, Grand Hyatt" : destination === "Jaipur" ? "Taj Rambagh Palace, Oberoi Rajvilas" : "5-star hotels and luxury resorts"}
+- **Budget**: ${destination === "Goa" ? "Zostel Goa, Backpacker Panda" : 
+                        destination === "Jaipur" ? "Moustache Hostel, Zostel Jaipur" : 
+                        destination === "Manali" ? "Local hostels and guesthouses" : 
+                        destination === "Kerala" ? "Local hostels and guesthouses" : 
+                        destination === "Darjeeling" ? "Local hostels and guesthouses" : "Local hostels and guesthouses"}
+- **Mid-range**: ${destination === "Goa" ? "Sea Queen Hotel, Santana Beach Resort" : 
+                        destination === "Jaipur" ? "Umaid Bhawan, Alsisar Haveli" : 
+                        destination === "Manali" ? "Local hostels and guesthouses" : 
+                        destination === "Kerala" ? "Local hostels and guesthouses" : 
+                        destination === "Darjeeling" ? "Local hostels and guesthouses" : "Local hostels and guesthouses"}
+- **Luxury**: ${destination === "Goa" ? "W Goa, Grand Hyatt" : 
+                        destination === "Jaipur" ? "Taj Rambagh Palace, Oberoi Rajvilas" : 
+                        destination === "Manali" ? "Local hostels and guesthouses" : 
+                        destination === "Kerala" ? "Local hostels and guesthouses" : 
+                        destination === "Darjeeling" ? "Local hostels and guesthouses" : "Local hostels and guesthouses"}
 
 Would you like me to modify this itinerary or provide more specific details on any aspect?
 `;
