@@ -4,6 +4,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Calendar, MapPin, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
 interface TripCardProps {
   title: string;
@@ -60,8 +61,10 @@ export function TripCard({
         </div>
       </CardContent>
       <CardFooter>
-        <Button className="w-full rounded-full" variant="outline">
-          View Details <ArrowRight className="ml-1 h-4 w-4" />
+        <Button className="w-full rounded-full" variant="outline" asChild>
+          <Link to={`/trip/${encodeURIComponent(title.toLowerCase().replace(/ /g, '-'))}`}>
+            View Details <ArrowRight className="ml-1 h-4 w-4" />
+          </Link>
         </Button>
       </CardFooter>
     </Card>
