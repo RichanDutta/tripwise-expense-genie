@@ -188,7 +188,7 @@ export function AIAssistant() {
         </div>
       </CardContent>
 
-      <style jsx global>{`
+      <style>{`
         .markdown-content h2 {
           font-size: 1.1rem;
           font-weight: bold;
