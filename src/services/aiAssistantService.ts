@@ -48,6 +48,7 @@ export const aiAssistantService = {
       }
       
       // Make the actual API call to the Python backend
+      // Fix: Change the 'message' parameter to 'content' or use the expected parameter name
       const response = await fetch(`${apiUrl}/chat`, {
         method: 'POST',
         headers: {
@@ -59,7 +60,8 @@ export const aiAssistantService = {
           'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },
         body: JSON.stringify({ 
-          message: content,
+          // Fix: Changed 'message' to 'content' which seems to be the expected parameter name
+          content: content,
           model: currentConfig.model
         }),
       });
